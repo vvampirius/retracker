@@ -1,16 +1,16 @@
 package storage
 
 import (
-	coreCommon "../common"
-	"../../bittorrent/common"
-	"../../bittorrent/tracker"
+	CoreCommon "github.com/vvampirius/retracker/core/common"
+	"github.com/vvampirius/retracker/bittorrent/common"
+	"github.com/vvampirius/retracker/bittorrent/tracker"
 	"time"
 	"log"
 	"os"
 )
 
 type Storage struct {
-	Config *coreCommon.Config
+	Config *CoreCommon.Config
 	Requests map[common.InfoHash]map[common.PeerID]tracker.Request
 	Logger *log.Logger
 }
@@ -62,7 +62,7 @@ func (self *Storage) purgeRoutine() {
 }
 
 
-func New(config *coreCommon.Config) *Storage {
+func New(config *CoreCommon.Config) *Storage {
 	logger := log.New(os.Stdout, `storage# `, log.Flags())
 	storage := Storage{
 		Config: config,

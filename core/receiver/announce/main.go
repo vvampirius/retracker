@@ -3,8 +3,8 @@ package announce
 import (
 	"log"
 	"os"
-	Storage "../../storage"
-	CoreCommon "../../common"
+	Storage "github.com/vvampirius/retracker/core/storage"
+	CoreCommon "github.com/vvampirius/retracker/core/common"
 )
 
 type Announce struct {

@@ -1,8 +1,8 @@
 package main
 
 import (
-	"../../core/common"
-	Core "../../core"
+	Core "github.com/vvampirius/retracker/core"
+	"github.com/vvampirius/retracker/core/common"
 	"flag"
 	"fmt"
 	"syscall"

@@ -1,7 +1,7 @@
 package tracker
 
 import (
-	"../common"
+	"github.com/vvampirius/retracker/bittorrent/common"
 	"github.com/zeebo/bencode"
 )
 

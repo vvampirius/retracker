@@ -3,9 +3,9 @@ package core
 import (
 	"net/http"
 	"fmt"
-	"./common"
-	Receiver "./receiver"
-	Storage "./storage"
+	"github.com/vvampirius/retracker/core/common"
+	Receiver "github.com/vvampirius/retracker/core/receiver"
+	Storage "github.com/vvampirius/retracker/core/storage"
 )
 
 type Core struct {

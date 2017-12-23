@@ -1,7 +1,7 @@
 package announce
 
 import (
-	"../../../bittorrent/tracker"
+	"github.com/vvampirius/retracker/bittorrent/tracker"
 )
 
 func (self *Announce) ProcessAnnounce(remoteAddr, infoHash, peerID, port, uploaded, downloaded, left, ip, numwant,
