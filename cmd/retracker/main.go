@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-const VERSION  = 0.1
+const VERSION  = 0.2
 
 func PrintRepo(){
 	fmt.Fprintln(os.Stderr, "\n# https://github.com/vvampirius/retracker")
@@ -24,6 +24,7 @@ func main() {
 	listen := flag.String("l", ":80", "Listen address:port")
 	age := flag.Float64("a", 180, "Keep 'n' minutes peer in memory")
 	debug := flag.Bool("d", false, "Debug mode")
+	xrealip := flag.Bool("x", false, "Get RemoteAddr from X-Real-IP header")
 	ver := flag.Bool("v", false, "Show version")
 	flag.Parse()
 
@@ -37,6 +38,7 @@ func main() {
 		Listen: *listen,
 		Debug: *debug,
 		Age: *age,
+		XRealIP: *xrealip,
 	}
 
 	Core.New(&config)

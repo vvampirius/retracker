@@ -7,11 +7,12 @@ import (
 )
 
 func (self *Announce) HttpHandler(w http.ResponseWriter, r *http.Request) {
+	xrealip := r.Header.Get(`X-Real-IP`)
 	if self.Logger != nil {
-		self.Logger.Printf("%s %s %s\n", r.RemoteAddr, r.RequestURI, r.UserAgent())
+		self.Logger.Printf("%s %s %s %s\n", r.RemoteAddr, xrealip, r.RequestURI, r.UserAgent())
 	}
 	rr := self.ProcessAnnounce(
-		self.parseRemoteAddr(r.RemoteAddr, `127.0.0.1`),
+		self.getRemoteAddr(r, xrealip),
 		r.URL.Query().Get(`info_hash`),
 		r.URL.Query().Get(`peer_id`),
 		r.URL.Query().Get(`port`),
@@ -28,6 +29,13 @@ func (self *Announce) HttpHandler(w http.ResponseWriter, r *http.Request) {
 			self.Logger.Printf("Bencode: %s\n", d)
 		}
 	} else { self.Logger.Println(err.Error()) }
+}
+
+func (self *Announce) getRemoteAddr(r *http.Request, xrealip string) string {
+	if self.Config.XRealIP && xrealip!=`` {
+		return xrealip
+	}
+	return self.parseRemoteAddr(r.RemoteAddr, `127.0.0.1`)
 }
 
 func (self *Announce) parseRemoteAddr(in, def string) string {
