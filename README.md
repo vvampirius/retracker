@@ -4,6 +4,7 @@ Simple HTTP torrent tracker.
 
 * Keep all in memory (no persistent; doesn't require a database).
 * Single binary executable (doesn't require a web-backend [apache, php-fpm, uwsgi, etc.])
+* Expose some metrics for Prometheus monitoring
 
 ## Installing
 
@@ -34,6 +35,12 @@ server {
 
         proxy_set_header X-Real-IP $remote_addr;
 
+        location /metrics {
+                allow 10.0.0.0/8;
+                deny  all;
+                proxy_pass http://localhost:8080;
+        }
+
         location / {
                 proxy_pass http://localhost:8080;
         }
@@ -42,7 +49,7 @@ server {
 
 Start tracker on port 8080 with getting remote address from X-Real-IP header.
 ```
-retracker -l :8080 -x
+retracker -l :8080 -x -p
 ```
 
 Add retracker.local to your local DNS or /etc/hosts.
