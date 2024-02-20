@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const VERSION = `0.5`
+const VERSION = `0.6`
 
 var (
 	ErrorLog = log.New(os.Stderr, `error#`, log.Lshortfile)
@@ -27,6 +27,7 @@ func main() {
 	xrealip := flag.Bool("x", false, "Get RemoteAddr from X-Real-IP header")
 	forwards := flag.String("f", "", "Load forwards from YAML file")
 	forwardTimeout := flag.Int("t", 2, "Timeout (sec) for forward requests (used with -f)")
+	enablePrometheus := flag.Bool("p", false, "Enable Prometheus metrics")
 	ver := flag.Bool("v", false, "Show version")
 	help := flag.Bool("h", false, "print this help")
 	flag.Parse()
@@ -59,6 +60,13 @@ func main() {
 
 	core := NewCore(&config)
 	http.HandleFunc("/announce", core.Receiver.Announce.httpHandler)
+	if *enablePrometheus {
+		p, err := NewPrometheus()
+		if err != nil {
+			os.Exit(1)
+		}
+		core.Receiver.Announce.Prometheus = p
+	}
 	if err := http.ListenAndServe(config.Listen, nil); err != nil { // set listen port
 		ErrorLog.Println(err)
 	}

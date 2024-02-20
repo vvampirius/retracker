@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/vvampirius/retracker/bittorrent/common"
 	Response "github.com/vvampirius/retracker/bittorrent/response"
 	"github.com/vvampirius/retracker/bittorrent/tracker"
@@ -16,11 +17,15 @@ import (
 )
 
 type ReceiverAnnounce struct {
-	Config  *Config
-	Storage *Storage
+	Config     *Config
+	Storage    *Storage
+	Prometheus *Prometheus
 }
 
 func (ra *ReceiverAnnounce) httpHandler(w http.ResponseWriter, r *http.Request) {
+	if ra.Prometheus != nil {
+		ra.Prometheus.Requests.Inc()
+	}
 	xrealip := r.Header.Get(`X-Real-IP`)
 	DebugLog.Printf("%s %s %s '%s' '%s'\n", r.Method, r.RemoteAddr, xrealip, r.RequestURI, r.UserAgent())
 	remoteAddr := ra.getRemoteAddr(r, xrealip)
@@ -124,11 +129,13 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 	if forward.Ip != `` {
 		uri = fmt.Sprintf("%s&ip=%s&ipv4=%s", uri, forward.Ip, forward.Ip) //TODO: check for IPv4
 	}
+	hash := fmt.Sprintf("%x", request.InfoHash)
+	forwardName := forward.GetName()
 	if ra.Config.Debug {
 		if forward.Ip != `` {
-			DebugLog.Printf("Announce %x to %s with IP %s", request.InfoHash, forward.GetName(), forward.Ip)
+			DebugLog.Printf("Announce %x to %s with IP %s", hash, forwardName, forward.Ip)
 		} else {
-			DebugLog.Printf("Announce %x to %s", request.InfoHash, forward.GetName())
+			DebugLog.Printf("Announce %x to %s", hash, forwardName)
 		}
 		//DebugLog.Println(uri)
 	}
@@ -142,11 +149,17 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 	client := http.Client{}
 	response, err := client.Do(rqst)
 	if err != nil {
-		ErrorLog.Printf("Announce %x to %s got error: %s", request.InfoHash, forward.GetName(), err.Error())
+		ErrorLog.Printf("Announce %x to %s got error: %s", hash, forwardName, err.Error())
+		if ra.Prometheus != nil {
+			ra.Prometheus.ForwarderStatus.With(prometheus.Labels{`name`: forwardName, `status`: `error`}).Inc()
+		}
 		ch <- peers
 		return
 	}
 	defer response.Body.Close()
+	if ra.Prometheus != nil {
+		ra.Prometheus.ForwarderStatus.With(prometheus.Labels{`name`: forwardName, `status`: fmt.Sprintf("%d", response.StatusCode)}).Inc()
+	}
 	if response.StatusCode != http.StatusOK {
 		ErrorLog.Printf("Announce %x to %s got status: %s", request.InfoHash, forward.GetName(), response.Status)
 		ch <- peers
@@ -155,6 +168,9 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 	payload, err := io.ReadAll(response.Body)
 	if err != nil {
 		ErrorLog.Printf("Announce %x from %s read error: %s", request.InfoHash, forward.GetName(), err.Error())
+		if ra.Prometheus != nil {
+			ra.Prometheus.ForwarderStatus.With(prometheus.Labels{`name`: forwardName, `status`: fmt.Sprintf("%d", response.StatusCode)}).Inc()
+		}
 		ch <- peers
 		return
 	}
@@ -169,6 +185,9 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 			tempFilename = ra.saveToTempFile(payload, fmt.Sprintf("%x", request.InfoHash), uri)
 		}
 		ErrorLog.Fatalln(`Check file`, tempFilename)
+		if ra.Prometheus != nil {
+			ra.Prometheus.ForwarderStatus.With(prometheus.Labels{`name`: forwardName, `status`: fmt.Sprintf("%d", response.StatusCode)}).Inc()
+		}
 		ch <- peers
 		return
 	}
