@@ -7,20 +7,21 @@ import (
 	"fmt"
 	"log"
 	"time"
+	"github.com/zeebo/bencode"
 )
 
 type Request struct {
 	timestamp time.Time
 	remoteAddr common.Address
-	InfoHash common.InfoHash
-	PeerID common.PeerID
-	Port int
-	Uploaded uint64
-	Downloaded uint64
-	Left uint64
-	IP common.Address
-	NumWant uint64
-	Event string
+	InfoHash common.InfoHash `bencode:"info_hash"`
+	PeerID common.PeerID `bencode:"peer_id"`
+	Port int `bencode:"port"`
+	Uploaded uint64 `bencode:"uploaded"`
+	Downloaded uint64 `bencode:"downloaded"`
+	Left uint64 `bencode:"left"`
+	IP common.Address `bencode:"ip"`
+	NumWant uint64 `bencode:"numwant"`
+	Event string `bencode:"event"`
 }
 
 func (self *Request) Peer() common.Peer {
@@ -39,6 +40,10 @@ func (self *Request) String() string {
 
 func (self *Request) TimeStampDelta() float64 {
 	return time.Now().Sub(self.timestamp).Minutes()
+}
+
+func (self *Request) Bencode() (string, error) {
+	return bencode.EncodeString(self)
 }
 
 func MakeRequest(remoteAddr, infoHash, peerID, port, uploaded, downloaded, left, ip, numwant,
@@ -85,3 +90,4 @@ event string, logger *log.Logger) (*Request, error) {
 
 	return &request, nil
 }
+

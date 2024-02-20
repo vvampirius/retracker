@@ -1,18 +1,14 @@
-package storage
+package main
 
 import (
-	CoreCommon "github.com/vvampirius/retracker/core/common"
 	"github.com/vvampirius/retracker/bittorrent/common"
 	"github.com/vvampirius/retracker/bittorrent/tracker"
 	"time"
-	"log"
-	"os"
 )
 
 type Storage struct {
-	Config *CoreCommon.Config
+	Config   *Config
 	Requests map[common.InfoHash]map[common.PeerID]tracker.Request
-	Logger *log.Logger
 }
 
 func (self *Storage) Update(request tracker.Request) {
@@ -40,34 +36,35 @@ func (self *Storage) GetPeers(infoHash common.InfoHash) []common.Peer {
 func (self *Storage) purgeRoutine() {
 	for true {
 		time.Sleep(1 * time.Minute)
-		logger := *self.Logger
-		logger.SetPrefix(`purgeRoutine() `)
-		if self.Config.Debug { logger.Printf("In memory %d hashes\n", len(self.Requests)) }
+		if self.Config.Debug {
+			DebugLog.Printf("In memory %d hashes\n", len(self.Requests))
+		}
 		for hash, requests := range self.Requests {
-			if self.Config.Debug { logger.Printf("%d peer in hash %x\n",len(requests), hash) }
+			if self.Config.Debug {
+				DebugLog.Printf("%d peer in hash %x\n", len(requests), hash)
+			}
 			for peerId, request := range requests {
 				timestampDelta := request.TimeStampDelta()
-				if self.Config.Debug { logger.Printf(" %x %s:%d %v\n", peerId, request.Peer().IP, request.Peer().Port, timestampDelta) }
+				if self.Config.Debug {
+					DebugLog.Printf(" %x %s:%d %v\n", peerId, request.Peer().IP, request.Peer().Port, timestampDelta)
+				}
 				if timestampDelta > self.Config.Age {
-					logger.Printf("delete peer %x in hash %x\n", peerId, hash)
+					DebugLog.Printf("delete peer %x in hash %x\n", peerId, hash)
 					delete(self.Requests[hash], peerId)
 				}
 			}
 			if len(requests) == 0 {
-				logger.Printf("delete hash %x\n", hash)
+				DebugLog.Printf("delete hash %x\n", hash)
 				delete(self.Requests, hash)
 			}
 		}
 	}
 }
 
-
-func New(config *CoreCommon.Config) *Storage {
-	logger := log.New(os.Stdout, `storage# `, log.Flags())
+func NewStorage(config *Config) *Storage {
 	storage := Storage{
-		Config: config,
+		Config:   config,
 		Requests: make(map[common.InfoHash]map[common.PeerID]tracker.Request),
-		Logger: logger,
 	}
 	go storage.purgeRoutine()
 	return &storage

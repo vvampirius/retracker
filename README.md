@@ -8,10 +8,9 @@ Simple HTTP torrent tracker.
 ## Installing
 
 ```
-export GOPATH=$HOME/retracker
-export PATH="$GOPATH/bin:$PATH"
-go get github.com/vvampirius/retracker/...
+go install 'github.com/vvampirius/retracker@latest'
 ```
+> Executables are installed in the directory named by the GOBIN environment variable, which defaults to $GOPATH/bin or $HOME/go/bin if the GOPATH environment variable is not set. Executables in $GOROOT are installed in $GOROOT/bin or $GOTOOLDIR instead of $GOBIN.
 
 ## Usage
 ### Standalone
