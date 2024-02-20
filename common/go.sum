@@ -1,4 +1,2 @@
 github.com/vvampirius/retracker/bittorrent/common v0.0.0-20240220190647-f55c77b0eb41 h1:FVGNAYF8Yt7LuTvF5qoLDka6l1Q/Pv+qaIDXX5aNmbI=
 github.com/vvampirius/retracker/bittorrent/common v0.0.0-20240220190647-f55c77b0eb41/go.mod h1:kE4HyoZ2ewwWqpkrFnB8NA0QlyNvBJ+JXaY8BTrBxVg=
-github.com/zeebo/bencode v1.0.0 h1:zgop0Wu1nu4IexAZeCZ5qbsjU4O1vMrfCrVgUjbHVuA=
-github.com/zeebo/bencode v1.0.0/go.mod h1:Ct7CkrWIQuLWAy9M3atFHYq4kG9Ao/SsY5cdtCXmp9Y=
