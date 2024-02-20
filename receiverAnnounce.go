@@ -11,15 +11,15 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"os"
 	"regexp"
 	"time"
 )
 
 type ReceiverAnnounce struct {
-	Config     *Config
-	Storage    *Storage
-	Prometheus *Prometheus
+	Config      *Config
+	Storage     *Storage
+	Prometheus  *Prometheus
+	TempStorage *TempStorage
 }
 
 func (ra *ReceiverAnnounce) httpHandler(w http.ResponseWriter, r *http.Request) {
@@ -176,13 +176,13 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 	}
 	tempFilename := ``
 	if ra.Config.Debug {
-		tempFilename = ra.saveToTempFile(payload, fmt.Sprintf("%x", request.InfoHash), uri)
+		tempFilename = ra.TempStorage.SaveBencodeFromForwarder(payload, fmt.Sprintf("%x", request.InfoHash), uri)
 	}
 	bitResponse, err := Response.Load(payload)
 	if err != nil {
 		ErrorLog.Printf("Announce %x from %s parse error: %s", request.InfoHash, forward.GetName(), err.Error())
 		if tempFilename == `` {
-			tempFilename = ra.saveToTempFile(payload, fmt.Sprintf("%x", request.InfoHash), uri)
+			tempFilename = ra.TempStorage.SaveBencodeFromForwarder(payload, fmt.Sprintf("%x", request.InfoHash), uri)
 		}
 		ErrorLog.Fatalln(`Check file`, tempFilename)
 		if ra.Prometheus != nil {
@@ -196,23 +196,6 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 	}
 	peers = append(peers, bitResponse.Peers...)
 	ch <- peers
-}
-
-func (ra *ReceiverAnnounce) saveToTempFile(p []byte, hash string, uri string) string {
-	f, err := os.CreateTemp(os.TempDir(), fmt.Sprintf("retracker_%s_", hash))
-	if err != nil {
-		ErrorLog.Println(err.Error())
-		return ``
-	}
-	defer f.Close()
-	if _, err := fmt.Fprintf(f, "%s\n%s\n", hash, uri); err != nil {
-		ErrorLog.Println(err.Error())
-		return f.Name()
-	}
-	if _, err := f.Write(p); err != nil {
-		ErrorLog.Println(err.Error())
-	}
-	return f.Name()
 }
 
 func NewReceiverAnnounce(config *Config, storage *Storage) *ReceiverAnnounce {

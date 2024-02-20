@@ -6,12 +6,13 @@ type Core struct {
 	Receiver *Receiver
 }
 
-func NewCore(config *Config) *Core {
+func NewCore(config *Config, tempStorage *TempStorage) *Core {
 	storage := NewStorage(config)
 	core := Core{
 		Config:   config,
 		Storage:  storage,
 		Receiver: NewReceiver(config, storage),
 	}
+	core.Receiver.Announce.TempStorage = tempStorage
 	return &core
 }

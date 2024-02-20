@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const VERSION = `0.6`
+const VERSION = `0.7.0`
 
 var (
 	ErrorLog = log.New(os.Stderr, `error#`, log.Lshortfile)
@@ -58,7 +58,12 @@ func main() {
 		}
 	}
 
-	core := NewCore(&config)
+	tempStorage, err := NewTempStorage(``)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	core := NewCore(&config, tempStorage)
 	http.HandleFunc("/announce", core.Receiver.Announce.httpHandler)
 	if *enablePrometheus {
 		p, err := NewPrometheus()
