@@ -1,4 +1,4 @@
-module github.com/vvampirius/bittorrent/tracker
+module github.com/vvampirius/retracker/bittorrent/tracker
 
 go 1.21.0
 

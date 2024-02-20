@@ -1,3 +1,3 @@
-module github.com/vvampirius/bittorrent/common
+module github.com/vvampirius/retracker/bittorrent/common
 
 go 1.21.0

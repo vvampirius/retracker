@@ -1,4 +1,4 @@
-module github.com/vvampirius/common
+module github.com/vvampirius/retracker/common
 
 go 1.21.0
 

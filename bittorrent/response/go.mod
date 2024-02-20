@@ -1,4 +1,4 @@
-module github.com/vvampirius/bittorrent/response
+module github.com/vvampirius/retracker/bittorrent/response
 
 go 1.21.0
 
