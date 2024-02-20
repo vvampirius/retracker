@@ -4,6 +4,7 @@ Simple HTTP torrent tracker.
 
 * Keep all in memory (no persistent; doesn't require a database).
 * Single binary executable (doesn't require a web-backend [apache, php-fpm, uwsgi, etc.])
+* Can collect peers from external trackers (HTTP only)
 * Expose some metrics for Prometheus monitoring
 
 ## Installing
@@ -55,6 +56,21 @@ retracker -l :8080 -x -p
 Add retracker.local to your local DNS or /etc/hosts.
 
 Add http://retracker.local/announce to your torrent.
+
+### Standalone with announce forwarding
+
+You can forward announce request to some external HTTP trackers and append peers from them to response to your torrent client.
+```
+retracker -l :8080 -d -f forwarders.yml
+```
+forwarders.yml:
+```
+- uri: http://1.2.3.4:8080/announce
+- uri: http://5.6.7.8:8080/announce
+- uri: http://5.6.7.8:8080/announce
+  ip: 192.168.1.15 # announce different torrent client IP to this forwarder
+```
+Add http://\<your ip>:8080/announce to your torrent.
 
 ## License
 
