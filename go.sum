@@ -23,6 +23,14 @@ github.com/prometheus/procfs v0.12.0 h1:jluTpSng7V9hY0O2R9DzzJHYb2xULk9VTR1V1R/k
 github.com/prometheus/procfs v0.12.0/go.mod h1:pcuDEFsWDnvcgNzo4EEweacyhjeA9Zk3cnaOZAZEfOo=
 github.com/rogpeppe/go-internal v1.10.0 h1:TMyTOH3F/DB16zRVcYyreMH6GnZZrwQVAoYjRBZyWFQ=
 github.com/rogpeppe/go-internal v1.10.0/go.mod h1:UQnix2H7Ngw/k4C5ijL5+65zddjncjaFoBhdsK/akog=
+github.com/vvampirius/retracker/bittorrent/common v0.0.0-20240220194728-c7d29bbccfc5 h1:iaOUYUXUFaoaKbHEDxhm9bnPggj47S1u6e4byFTo7PY=
+github.com/vvampirius/retracker/bittorrent/common v0.0.0-20240220194728-c7d29bbccfc5/go.mod h1:U5uBLU9mvpW6+wSJGgtF2JwWeP3JBs6c71d3nOcnZtc=
+github.com/vvampirius/retracker/bittorrent/response v0.0.0-20240220194728-c7d29bbccfc5 h1:ts6dfSiZl5e4tb//OnzFfjjfOey2UyEB5RIp5TvZrW8=
+github.com/vvampirius/retracker/bittorrent/response v0.0.0-20240220194728-c7d29bbccfc5/go.mod h1:Sg8fmGQMOVXgOhtPWfdrpTeN+WkU+tvYtm02bGev7q4=
+github.com/vvampirius/retracker/bittorrent/tracker v0.0.0-20240220194728-c7d29bbccfc5 h1:/aEDqTLq1rIt9YQG0lkGvvxBGTqpNcKgpYMyxm6iBgI=
+github.com/vvampirius/retracker/bittorrent/tracker v0.0.0-20240220194728-c7d29bbccfc5/go.mod h1:6aqMAJ3UXaFR1AcFrMIG+jiDCw6AdMXEh5psFxUnVnw=
+github.com/vvampirius/retracker/common v0.0.0-20240220194728-c7d29bbccfc5 h1:t3Bb0FPMSE0irG6JQHC4EK0JAKX5R9lfMq83b5FHUuc=
+github.com/vvampirius/retracker/common v0.0.0-20240220194728-c7d29bbccfc5/go.mod h1:BLHj6lQ135X0htdasSS7rAWjVjwXTLWbfKuZbnZ6oCQ=
 github.com/zeebo/bencode v1.0.0 h1:zgop0Wu1nu4IexAZeCZ5qbsjU4O1vMrfCrVgUjbHVuA=
 github.com/zeebo/bencode v1.0.0/go.mod h1:Ct7CkrWIQuLWAy9M3atFHYq4kG9Ao/SsY5cdtCXmp9Y=
 golang.org/x/sys v0.15.0 h1:h48lPFYpsTvQJZF4EKyI4aLHaev3CxivZmv7yZig9pc=
