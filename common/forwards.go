@@ -7,8 +7,8 @@ type Forward struct {
 	Uri  string
 	//TODO:
 	//Proxy string
-	Ip string
-	//Host string
+	Ip   string
+	Host string
 	//Dns []string
 }
 

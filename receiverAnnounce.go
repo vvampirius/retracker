@@ -146,6 +146,9 @@ func (ra *ReceiverAnnounce) makeForward(forward CoreCommon.Forward, request trac
 		ch <- peers
 		return
 	}
+	if forward.Host != `` {
+		rqst.Host = forward.Host
+	}
 	client := http.Client{}
 	response, err := client.Do(rqst)
 	if err != nil {

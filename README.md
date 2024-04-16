@@ -1,5 +1,7 @@
 # retracker
 
+![image](diagram.jpg)
+
 Simple HTTP torrent tracker.
 
 * Keep all in memory (no persistent; doesn't require a database).
@@ -69,6 +71,8 @@ forwarders.yml:
 - uri: http://5.6.7.8:8080/announce
 - uri: http://5.6.7.8:8080/announce
   ip: 192.168.1.15 # announce different torrent client IP to this forwarder
+- uri: http://192.168.1.1:8080/announce
+  host: retracker.local # external retracker.local (like on picture above)
 ```
 Add http://\<your ip>:8080/announce to your torrent.
 

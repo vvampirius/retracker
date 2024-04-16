@@ -4,6 +4,10 @@ go 1.21.0
 
 require (
 	github.com/prometheus/client_golang v1.18.0
+	github.com/vvampirius/retracker/bittorrent/common v0.0.0-20240220194728-c7d29bbccfc5
+	github.com/vvampirius/retracker/bittorrent/response v0.0.0-20240220194728-c7d29bbccfc5
+	github.com/vvampirius/retracker/bittorrent/tracker v0.0.0-20240220194728-c7d29bbccfc5
+	github.com/vvampirius/retracker/common v0.0.0-20240220194728-c7d29bbccfc5
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -15,10 +19,6 @@ require (
 	github.com/prometheus/client_model v0.5.0 // indirect
 	github.com/prometheus/common v0.45.0 // indirect
 	github.com/prometheus/procfs v0.12.0 // indirect
-	github.com/vvampirius/retracker/bittorrent/common v0.0.0-20240220194728-c7d29bbccfc5 // indirect
-	github.com/vvampirius/retracker/bittorrent/response v0.0.0-20240220194728-c7d29bbccfc5 // indirect
-	github.com/vvampirius/retracker/bittorrent/tracker v0.0.0-20240220194728-c7d29bbccfc5 // indirect
-	github.com/vvampirius/retracker/common v0.0.0-20240220194728-c7d29bbccfc5 // indirect
 	github.com/zeebo/bencode v1.0.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
