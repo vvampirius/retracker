@@ -3,15 +3,19 @@ package main
 import (
 	"github.com/vvampirius/retracker/bittorrent/common"
 	"github.com/vvampirius/retracker/bittorrent/tracker"
+	"sync"
 	"time"
 )
 
 type Storage struct {
-	Config   *Config
-	Requests map[common.InfoHash]map[common.PeerID]tracker.Request
+	Config     *Config
+	Requests   map[common.InfoHash]map[common.PeerID]tracker.Request
+	requestsMu sync.Mutex
 }
 
 func (self *Storage) Update(request tracker.Request) {
+	self.requestsMu.Lock()
+	defer self.requestsMu.Unlock()
 	if _, ok := self.Requests[request.InfoHash]; !ok {
 		self.Requests[request.InfoHash] = make(map[common.PeerID]tracker.Request)
 	}
@@ -20,10 +24,14 @@ func (self *Storage) Update(request tracker.Request) {
 }
 
 func (self *Storage) Delete(request tracker.Request) {
+	self.requestsMu.Lock()
+	defer self.requestsMu.Unlock()
 	delete(self.Requests[request.InfoHash], request.PeerID) //TODO: test this
 }
 
 func (self *Storage) GetPeers(infoHash common.InfoHash) []common.Peer {
+	self.requestsMu.Lock()
+	defer self.requestsMu.Unlock()
 	peers := make([]common.Peer, 0)
 	if requests, ok := self.Requests[infoHash]; ok {
 		for _, request := range requests {
@@ -38,7 +46,9 @@ func (self *Storage) purgeRoutine() {
 		time.Sleep(1 * time.Minute)
 		if self.Config.Debug {
 			DebugLog.Printf("In memory %d hashes\n", len(self.Requests))
+			DebugLog.Println(`Locking...`)
 		}
+		self.requestsMu.Lock()
 		for hash, requests := range self.Requests {
 			if self.Config.Debug {
 				DebugLog.Printf("%d peer in hash %x\n", len(requests), hash)
@@ -57,6 +67,10 @@ func (self *Storage) purgeRoutine() {
 				DebugLog.Printf("delete hash %x\n", hash)
 				delete(self.Requests, hash)
 			}
+		}
+		self.requestsMu.Unlock()
+		if self.Config.Debug {
+			DebugLog.Println(`Unlocked`)
 		}
 	}
 }
