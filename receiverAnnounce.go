@@ -85,7 +85,7 @@ func (ra *ReceiverAnnounce) ProcessAnnounce(remoteAddr, infoHash, peerID, port, 
 		event, DebugLog); err == nil {
 
 		response := Response.Response{
-			Interval: 30,
+			Interval: ra.Config.AnnounceResponseInterval,
 		}
 
 		if request.Event != `stopped` {

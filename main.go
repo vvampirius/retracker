@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const VERSION = `0.8.1`
+const VERSION = `0.9.0`
 
 var (
 	ErrorLog = log.New(os.Stderr, `error#`, log.Lshortfile)
@@ -28,6 +28,7 @@ func main() {
 	forwards := flag.String("f", "", "Load forwards from YAML file")
 	forwardTimeout := flag.Int("t", 2, "Timeout (sec) for forward requests (used with -f)")
 	enablePrometheus := flag.Bool("p", false, "Enable Prometheus metrics")
+	announceResponseInterval := flag.Int("i", 30, "Announce response interval (sec)")
 	ver := flag.Bool("v", false, "Show version")
 	help := flag.Bool("h", false, "print this help")
 	flag.Parse()
@@ -45,11 +46,12 @@ func main() {
 	fmt.Printf("Starting version %s\n", VERSION)
 
 	config := Config{
-		Listen:         *listen,
-		Debug:          *debug,
-		Age:            *age,
-		XRealIP:        *xrealip,
-		ForwardTimeout: *forwardTimeout,
+		AnnounceResponseInterval: *announceResponseInterval,
+		Listen:                   *listen,
+		Debug:                    *debug,
+		Age:                      *age,
+		XRealIP:                  *xrealip,
+		ForwardTimeout:           *forwardTimeout,
 	}
 
 	if *forwards != `` {

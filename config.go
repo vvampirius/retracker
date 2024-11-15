@@ -7,12 +7,13 @@ import (
 )
 
 type Config struct {
-	Listen         string
-	Debug          bool
-	Age            float64
-	XRealIP        bool
-	Forwards       []common.Forward
-	ForwardTimeout int
+	AnnounceResponseInterval int
+	Listen                   string
+	Debug                    bool
+	Age                      float64
+	XRealIP                  bool
+	Forwards                 []common.Forward
+	ForwardTimeout           int
 }
 
 func (config *Config) ReloadForwards(fileName string) error {
