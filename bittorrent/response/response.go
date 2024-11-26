@@ -3,12 +3,11 @@ package response
 import (
 	"github.com/vvampirius/retracker/bittorrent/common"
 	"github.com/zeebo/bencode"
-	"fmt"
 )
 
 type Response struct {
-	Interval int `bencode:"interval"`
-	Peers []common.Peer `bencode:"peers"`
+	Interval int           `bencode:"interval"`
+	Peers    []common.Peer `bencode:"peers"`
 }
 
 func (self *Response) Bencode(compacted bool) (string, error) {
@@ -29,13 +28,13 @@ func (self *Response) Compacted() ResponseCompacted {
 
 func Load(b []byte) (*Response, error) {
 	response := Response{}
-	if err := bencode.DecodeBytes(b, &response); err!=nil {
+	if err := bencode.DecodeBytes(b, &response); err != nil {
 		responseCompacted := ResponseCompacted{}
-		if err := bencode.DecodeBytes(b, &responseCompacted); err==nil {
+		if err := bencode.DecodeBytes(b, &responseCompacted); err == nil {
 			response = responseCompacted.Response()
-			fmt.Println()
-		} else { return nil, err }
+		} else {
+			return nil, err
+		}
 	}
 	return &response, nil
 }
-

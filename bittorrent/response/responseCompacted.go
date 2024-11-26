@@ -3,7 +3,6 @@ package response
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
 	"github.com/vvampirius/retracker/bittorrent/common"
 	"github.com/zeebo/bencode"
 	"net"
@@ -94,11 +93,11 @@ func (self *ResponseCompacted) ReloadPeers(peers []common.Peer) {
 			binary.BigEndian.PutUint16(portBytes, uint16(peer.Port))
 			peers4.Write(portBytes) // write port to buf
 		} else if ip, err := peer.IP.IPv6(); err == nil { // if not IPv4 -> check for IPv6
-			fmt.Printf("IPv6 peer in compacted mode: %s:%d\n", ip, peer.Port)
+			DebugLog.Printf("IPv6 peer in compacted mode: %s:%d\n", ip, peer.Port)
 			peers6.Write([]byte(ip)) // write IP to buf
 			portBytes := make([]byte, 2)
 			binary.BigEndian.PutUint16(portBytes, uint16(peer.Port))
-			peers4.Write(portBytes) // write port to buf
+			peers6.Write(portBytes) // write port to buf
 		}
 	}
 	self.Peers4 = peers4.Bytes()
