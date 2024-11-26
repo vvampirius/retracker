@@ -98,6 +98,8 @@ func (self *ResponseCompacted) ReloadPeers(peers []common.Peer) {
 			portBytes := make([]byte, 2)
 			binary.BigEndian.PutUint16(portBytes, uint16(peer.Port))
 			peers6.Write(portBytes) // write port to buf
+		} else {
+			ErrorLog.Printf("Can't identify IP: %v", peer.IP)
 		}
 	}
 	self.Peers4 = peers4.Bytes()

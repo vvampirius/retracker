@@ -50,7 +50,6 @@ func (ra *ReceiverAnnounce) httpHandler(w http.ResponseWriter, r *http.Request) 
 	if r.URL.Query().Get(`compact`) == `1` {
 		compacted = true
 	}
-	DebugLog.Printf("Peers count: %d", len(response.Peers))
 	d, err := response.Bencode(compacted)
 	if err != nil {
 		ErrorLog.Println(err.Error())
