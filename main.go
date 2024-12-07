@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"log"
@@ -8,11 +9,14 @@ import (
 	"os"
 )
 
-const VERSION = `0.9.3`
+const VERSION = `0.9.4`
 
 var (
 	ErrorLog = log.New(os.Stderr, `error#`, log.Lshortfile)
 	DebugLog = log.New(os.Stdout, `debug#`, log.Lshortfile)
+
+	//go:embed favicon.ico
+	faviconIco []byte
 )
 
 func helpText() {
@@ -66,6 +70,14 @@ func main() {
 	}
 
 	core := NewCore(&config, tempStorage)
+
+	// https://github.com/vvampirius/retracker/issues/7
+	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "image/x-icon")
+		w.Header().Set("Content-Length", fmt.Sprintf("%d", len(faviconIco)))
+		w.Write(faviconIco)
+	})
+
 	http.HandleFunc("/announce", core.Receiver.Announce.httpHandler)
 	if *enablePrometheus {
 		p, err := NewPrometheus()
