@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-const VERSION = `0.9.4`
+const VERSION = `0.10.0`
 
 var (
 	ErrorLog = log.New(os.Stderr, `error#`, log.Lshortfile)
@@ -78,6 +78,7 @@ func main() {
 		w.Write(faviconIco)
 	})
 
+	http.HandleFunc("/scrape", core.httpScrapeHandler)
 	http.HandleFunc("/announce", core.Receiver.Announce.httpHandler)
 	if *enablePrometheus {
 		p, err := NewPrometheus()
